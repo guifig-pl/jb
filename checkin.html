@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinking of You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeb3b 50%, #ffc107 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            border-radius: 30px;
+            padding: 30px 25px;
+            box-shadow: 0 20px 60px rgba(255, 193, 7, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hearts decoration */
+        .hearts {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #f9a825;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* Login Page */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #fff3cd;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffc107, #ffeb3b);
+            color: #333;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Main Page Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            padding: 20px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn .emoji {
+            font-size: 32px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-dinner { background: linear-gradient(135deg, #ff9a56, #ffb347); color: white; }
+        .btn-lunch { background: linear-gradient(135deg, #7ed56f, #55c57a); color: white; }
+        .btn-abs { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-cuddle { background: linear-gradient(135deg, #ff6b9d, #ff8fab); color: white; }
+        .btn-work { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+        .btn-home { background: linear-gradient(135deg, #fa709a, #fee140); color: white; }
+        .btn-night { background: linear-gradient(135deg, #5c258d, #4389a2); color: white; }
+        .btn-coffee { background: linear-gradient(135deg, #c9a66b, #8b6914); color: white; }
+        .btn-arrived { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
+        .btn-leaving { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .btn-workdone { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+        .btn-gym { background: linear-gradient(135deg, #eb3349, #f45c43); color: white; }
+        .btn-social { background: linear-gradient(135deg, #ffecd2, #fcb69f); color: #333; }
+        .btn-lowenergy { background: linear-gradient(135deg, #bdc3c7, #2c3e50); color: white; }
+        .btn-allgood { background: linear-gradient(135deg, #96fbc4, #f9f586); color: #333; }
+        .btn-stressed { background: linear-gradient(135deg, #ff6a88, #ff99ac); color: white; }
+        .btn-thinking { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: white; }
+        .btn-call { background: linear-gradient(135deg, #21d4fd, #b721ff); color: white; }
+        .btn-hug { background: linear-gradient(135deg, #fdfbfb, #ebedee); color: #333; }
+        .btn-postgym { background: linear-gradient(135deg, #f6d365, #fda085); color: white; }
+        .btn-morning { background: linear-gradient(135deg, #f5af19, #f12711); color: white; }
+        .btn-goingout { background: linear-gradient(135deg, #00c6fb, #005bea); color: white; }
+        .btn-wine { background: linear-gradient(135deg, #722f37, #c94b4b); color: white; }
+        .btn-friends { background: linear-gradient(135deg, #f857a6, #ff5858); color: white; }
+        .btn-sauna { background: linear-gradient(135deg, #ff512f, #dd2476); color: white; }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #fff3cd;
+            border-radius: 12px;
+            background: white;
+            color: #f9a825;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #fffde7;
+            border-color: #ffc107;
+        }
+
+        /* History/Sent Pages */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 12px;
+            background: #fffde7;
+            color: #f9a825;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #fff3cd;
+        }
+
+        .page-title {
+            color: #f9a825;
+            font-size: 22px;
+        }
+
+        .message-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .message-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .message-list::-webkit-scrollbar-thumb {
+            background: #ffd54f;
+            border-radius: 3px;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, #fffde7, #fff);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #fff3cd;
+        }
+
+        .message-icon {
+            font-size: 28px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.1);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #ccc;
+        }
+
+        .empty-state .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Confirmation Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #ffc107, #ffeb3b);
+            color: #333;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 40px rgba(255, 193, 7, 0.4);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* User selector */
+        .user-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #fff3cd;
+            border-radius: 12px;
+            background: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-btn.active {
+            background: linear-gradient(135deg, #ffc107, #ffeb3b);
+            color: #333;
+            border-color: #ffc107;
+        }
+
+        .user-btn:not(.active):hover {
+            background: #fffde7;
+        }
+
+        .current-user {
+            text-align: center;
+            padding: 8px 15px;
+            background: #fffde7;
+            border-radius: 10px;
+            color: #f9a825;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 10px;
+            background: #fffde7;
+            color: #f9a825;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #fff3cd;
+        }
+
+        .main-page {
+            position: relative;
+        }
+
+        /* Clear history button */
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border: 2px dashed #fff3cd;
+            border-radius: 10px;
+            background: transparent;
+            color: #ccc;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clear-btn:hover {
+            border-color: #ff6b6b;
+            color: #f9a825;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div class="page active" id="loginPage">
+            <div class="hearts">🧩</div>
+            <h1>Thinking of You</h1>
+            <p class="subtitle">A quiet place to stay in sync</p>
+            <div class="login-form">
+                <div class="input-group">
+                    <input type="password" id="passwordInput" placeholder="Enter your secret password" autocomplete="off">
+                </div>
+                <div class="user-selector">
+                    <button class="user-btn active" data-user="1">Pierre</button>
+                    <button class="user-btn" data-user="2">Gui</button>
+                </div>
+                <button class="btn btn-primary" onclick="login()">Share with Care 🫶</button>
+            </div>
+        </div>
+
+        <!-- Main Page -->
+        <div class="page main-page" id="mainPage">
+            <button class="logout-btn" onclick="logout()" title="Logout">🚪</button>
+            <div class="hearts">📍</div>
+            <h1>Quick Update</h1>
+            <div class="current-user" id="currentUserDisplay"></div>
+            <div class="action-buttons">
+                <button class="action-btn btn-lunch" onclick="sendMessage('lunch')">
+                    <span class="emoji">🥗</span>
+                    Lunch Now
+                </button>
+                <button class="action-btn btn-dinner" onclick="sendMessage('dinner')">
+                    <span class="emoji">🍽️</span>
+                    Dinner Now
+                </button>
+                <button class="action-btn btn-morning" onclick="sendMessage('morning')">
+                    <span class="emoji">🌅</span>
+                    Good Morning
+                </button>
+                <button class="action-btn btn-night" onclick="sendMessage('night')">
+                    <span class="emoji">😴</span>
+                    Good Night
+                </button>
+                <button class="action-btn btn-leaving" onclick="sendMessage('leaving')">
+                    <span class="emoji">🚪</span>
+                    Leaving Now
+                </button>
+                <button class="action-btn btn-arrived" onclick="sendMessage('arrived')">
+                    <span class="emoji">🏠</span>
+                    Just Arrived
+                </button>
+                <button class="action-btn btn-work" onclick="sendMessage('work')">
+                    <span class="emoji">💼</span>
+                    Going to Work
+                </button>
+                <button class="action-btn btn-goingout" onclick="sendMessage('goingout')">
+                    <span class="emoji">🚶</span>
+                    Going Out
+                </button>
+                <button class="action-btn btn-coffee" onclick="sendMessage('coffee')">
+                    <span class="emoji">☕</span>
+                    Coffee Break
+                </button>
+                <button class="action-btn btn-workdone" onclick="sendMessage('workdone')">
+                    <span class="emoji">✅</span>
+                    Work Done
+                </button>
+                <button class="action-btn btn-social" onclick="sendMessage('social')">
+                    <span class="emoji">🫱</span>
+                    Feeling Social
+                </button>
+                <button class="action-btn btn-stressed" onclick="sendMessage('stressed')">
+                    <span class="emoji">🫠</span>
+                    Feeling Stressed
+                </button>
+                <button class="action-btn btn-allgood" onclick="sendMessage('allgood')">
+                    <span class="emoji">🙂</span>
+                    All Good Here
+                </button>
+                <button class="action-btn btn-cuddle" onclick="sendMessage('cuddle')">
+                    <span class="emoji">🤗</span>
+                    I Need Cuddling
+                </button>
+                <button class="action-btn btn-thinking" onclick="sendMessage('thinking')">
+                    <span class="emoji">💭</span>
+                    Thinking of You
+                </button>
+                <button class="action-btn btn-call" onclick="sendMessage('call')">
+                    <span class="emoji">📞</span>
+                    Would Love a Call
+                </button>
+                <button class="action-btn btn-hug" onclick="sendMessage('hug')">
+                    <span class="emoji">🤍</span>
+                    Sending a Hug
+                </button>
+                <button class="action-btn btn-abs" onclick="sendMessage('abs')">
+                    <span class="emoji">💪</span>
+                    Abs Time
+                </button>
+                <button class="action-btn btn-postgym" onclick="sendMessage('postgym')">
+                    <span class="emoji">✨</span>
+                    Post-Workout Glow
+                </button>
+                <button class="action-btn btn-wine" onclick="sendMessage('wine')">
+                    <span class="emoji">🍷</span>
+                    Wine Time
+                </button>
+                <button class="action-btn btn-friends" onclick="sendMessage('friends')">
+                    <span class="emoji">👯</span>
+                    Meeting Friends
+                </button>
+                <button class="action-btn btn-sauna" onclick="sendMessage('sauna')">
+                    <span class="emoji">🔥</span>
+                    Sauna Time
+                </button>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showPage('historyPage')">📥 Received</button>
+                <button class="nav-btn" onclick="showPage('sentPage')">📤 Sent</button>
+            </div>
+        </div>
+
+        <!-- History Page (Received) -->
+        <div class="page" id="historyPage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('mainPage')">←</button>
+                <h2 class="page-title">📥 Received Messages</h2>
+            </div>
+            <div class="message-list" id="historyList"></div>
+            <button class="clear-btn" onclick="clearHistory('received')">Clear received messages</button>
+        </div>
+
+        <!-- Sent Page -->
+        <div class="page" id="sentPage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('mainPage')">←</button>
+                <h2 class="page-title">📤 Sent Messages</h2>
+            </div>
+            <div class="message-list" id="sentList"></div>
+            <button class="clear-btn" onclick="clearHistory('sent')">Clear sent messages</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm0LJ1M9ogO6ThtivIyejlAcRbot1do8o",
+            authDomain: "check-in-app-64d4e.firebaseapp.com",
+            projectId: "check-in-app-64d4e",
+            storageBucket: "check-in-app-64d4e.firebasestorage.app",
+            messagingSenderId: "753026442046",
+            appId: "1:753026442046:web:440d517f1b9301c67f026f",
+            measurementId: "G-YBER80DTJL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db available globally
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.query = query;
+        window.where = where;
+        window.orderBy = orderBy;
+        window.onSnapshot = onSnapshot;
+        window.deleteDoc = deleteDoc;
+        window.getDocs = getDocs;
+
+        // Initialize app after Firebase loads
+        window.firebaseReady = true;
+        if (window.initApp) window.initApp();
+    </script>
+
+    <script>
+        // Configuration
+        const APP_PASSWORD = 'gpdaily'; // Change this to your shared password
+
+        const MESSAGE_TYPES = {
+            dinner: { emoji: '🍽️', text: 'Dinner Now!' },
+            lunch: { emoji: '🥗', text: 'Lunch Now!' },
+            abs: { emoji: '💪', text: 'Abs Time!' },
+            cuddle: { emoji: '🤗', text: 'I Need Cuddling!' },
+            work: { emoji: '💼', text: 'Going to Work!' },
+            home: { emoji: '🏠', text: 'Home Now!' },
+            night: { emoji: '😴', text: 'Good Night!' },
+            coffee: { emoji: '☕', text: 'Coffee Break!' },
+            arrived: { emoji: '🏠', text: 'Just Arrived!' },
+            leaving: { emoji: '🚪', text: 'Leaving Now!' },
+            workdone: { emoji: '✅', text: 'Work Done!' },
+            gym: { emoji: '🏋️', text: 'At the Gym!' },
+            social: { emoji: '🫱', text: 'Feeling Social!' },
+            lowenergy: { emoji: '🪫', text: 'Low Energy Today' },
+            allgood: { emoji: '🙂', text: 'All Good Here!' },
+            stressed: { emoji: '🫠', text: 'Feeling Stressed' },
+            thinking: { emoji: '💭', text: 'Thinking of You!' },
+            call: { emoji: '📞', text: 'Would Love a Call!' },
+            hug: { emoji: '🤍', text: 'Sending a Hug!' },
+            postgym: { emoji: '✨', text: 'Post-Workout Glow!' },
+            morning: { emoji: '🌅', text: 'Good Morning!' },
+            goingout: { emoji: '🚶', text: 'Going Out!' },
+            wine: { emoji: '🍷', text: 'Wine Time!' },
+            friends: { emoji: '👯', text: 'Meeting Friends!' },
+            sauna: { emoji: '🔥', text: 'Sauna Time!' }
+        };
+
+        let currentUser = '1';
+        let notificationPermission = false;
+        let lastMessageTimestamp = 0;
+        let unsubscribeMessages = null;
+
+        // Initialize app
+        function initApp() {
+            // Check if already logged in
+            const savedUser = localStorage.getItem('couples_current_user');
+            if (savedUser) {
+                currentUser = savedUser;
+                showPage('mainPage');
+                setupRealtimeListener();
+            }
+        }
+        window.initApp = initApp;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // User selector buttons
+            document.querySelectorAll('.user-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.user-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentUser = btn.dataset.user;
+                });
+            });
+
+            // Enter key for login
+            document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') login();
+            });
+
+            // Request notification permission
+            requestNotificationPermission();
+
+            // If Firebase already loaded, init
+            if (window.firebaseReady) initApp();
+        });
+
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    notificationPermission = true;
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        notificationPermission = permission === 'granted';
+                    });
+                }
+            }
+        }
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === APP_PASSWORD) {
+                localStorage.setItem('couples_current_user', currentUser);
+                showPage('mainPage');
+                document.getElementById('passwordInput').value = '';
+
+                // Request notification permission after login
+                requestNotificationPermission();
+
+                // Setup realtime listener
+                setupRealtimeListener();
+            } else {
+                showToast('Wrong password! Try again 💔');
+            }
+        }
+
+        function logout() {
+            if (unsubscribeMessages) unsubscribeMessages();
+            localStorage.removeItem('couples_current_user');
+            showPage('loginPage');
+        }
+
+        function setupRealtimeListener() {
+            if (!window.db) return;
+
+            // Listen for new messages sent to current user
+            const q = window.query(
+                window.collection(window.db, 'messages'),
+                window.where('to', '==', currentUser),
+                window.orderBy('timestamp', 'desc')
+            );
+
+            unsubscribeMessages = window.onSnapshot(q, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const msg = change.doc.data();
+                        // Only notify for new messages (not initial load)
+                        if (msg.timestamp > lastMessageTimestamp && lastMessageTimestamp > 0) {
+                            // Use message field if available, otherwise fall back to MESSAGE_TYPES
+                            const messageText = msg.message || (MESSAGE_TYPES[msg.type]?.text || 'New message');
+                            const messageEmoji = msg.message ? msg.message.split(' ')[0] : (MESSAGE_TYPES[msg.type]?.emoji || '💌');
+
+                            if (notificationPermission) {
+                                new Notification('🧩 New Update!', {
+                                    body: `${USER_NAMES[msg.from]}: ${messageText}`,
+                                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🧩</text></svg>'
+                                });
+                            }
+                            showToast(`${messageEmoji} New message from ${USER_NAMES[msg.from]}!`);
+                        }
+                        if (msg.timestamp > lastMessageTimestamp) {
+                            lastMessageTimestamp = msg.timestamp;
+                        }
+                    }
+                });
+            });
+
+            // Set initial timestamp
+            lastMessageTimestamp = Date.now();
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'mainPage') {
+                updateCurrentUserDisplay();
+            } else if (pageId === 'historyPage') {
+                renderHistory();
+            } else if (pageId === 'sentPage') {
+                renderSent();
+            }
+        }
+
+        const USER_NAMES = { '1': 'Pierre', '2': 'Gui' };
+
+        function updateCurrentUserDisplay() {
+            const display = document.getElementById('currentUserDisplay');
+            display.textContent = `Logged in as ${USER_NAMES[currentUser]} 💖`;
+        }
+
+        async function sendMessage(type) {
+            if (!window.db) {
+                showToast('Connecting to server...');
+                return;
+            }
+
+            const msgInfo = MESSAGE_TYPES[type];
+            if (!msgInfo) {
+                console.error('Unknown message type:', type);
+                showToast('Error: Unknown message type');
+                return;
+            }
+
+            // Construct the full message text with emoji and text
+            const fullMessage = `${msgInfo.emoji} ${msgInfo.text}`;
+
+            const message = {
+                message: fullMessage,  // Add the full message text
+                type: type,  // Keep type for backwards compatibility
+                from: currentUser,
+                fromName: USER_NAMES[currentUser],  // Add sender's name
+                to: currentUser === '1' ? '2' : '1',
+                toName: USER_NAMES[currentUser === '1' ? '2' : '1'],  // Add recipient's name
+                timestamp: Date.now()
+            };
+
+            try {
+                // Save to Firebase
+                await window.addDoc(window.collection(window.db, 'messages'), message);
+
+                // Show confirmation
+                showToast(`${msgInfo.emoji} Sent to ${USER_NAMES[message.to]}! 💕`);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showToast('Failed to send. Try again!');
+            }
+        }
+
+        async function renderHistory() {
+            const list = document.getElementById('historyList');
+
+            if (!window.db) {
+                list.innerHTML = '<div class="empty-state"><p>Loading...</p></div>';
+                return;
+            }
+
+            try {
+                const q = window.query(
+                    window.collection(window.db, 'messages'),
+                    window.where('to', '==', currentUser),
+                    window.orderBy('timestamp', 'desc')
+                );
+
+                const snapshot = await window.getDocs(q);
+                const messages = [];
+                snapshot.forEach(doc => messages.push(doc.data()));
+
+                if (messages.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">📭</div>
+                            <p>No messages yet</p>
+                            <p>Your love will send you something soon!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = messages.map(msg => {
+                    // Try to get message from the message field first
+                    let messageText, messageEmoji;
+
+                    if (msg.message) {
+                        // Message field exists - parse it
+                        messageText = msg.message;
+                        messageEmoji = msg.message.split(' ')[0]; // Extract emoji from message
+                    } else if (msg.type && MESSAGE_TYPES[msg.type]) {
+                        // Fall back to MESSAGE_TYPES lookup for old messages
+                        const msgInfo = MESSAGE_TYPES[msg.type];
+                        messageText = msgInfo.text;
+                        messageEmoji = msgInfo.emoji;
+                    } else {
+                        // Unknown message type - show friendly error
+                        messageText = 'Message (format unknown)';
+                        messageEmoji = '💌';
+                    }
+
+                    const time = formatTime(msg.timestamp);
+                    const fromName = msg.fromName || USER_NAMES[msg.from] || 'Unknown';
+
+                    return `
+                        <div class="message-item">
+                            <div class="message-icon">${messageEmoji}</div>
+                            <div class="message-content">
+                                <div class="message-text">${messageText}</div>
+                                <div class="message-time">From ${fromName} • ${time}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                list.innerHTML = '<div class="empty-state"><p>Error loading messages</p></div>';
+            }
+        }
+
+        async function renderSent() {
+            const list = document.getElementById('sentList');
+
+            if (!window.db) {
+                list.innerHTML = '<div class="empty-state"><p>Loading...</p></div>';
+                return;
+            }
+
+            try {
+                const q = window.query(
+                    window.collection(window.db, 'messages'),
+                    window.where('from', '==', currentUser),
+                    window.orderBy('timestamp', 'desc')
+                );
+
+                const snapshot = await window.getDocs(q);
+                const messages = [];
+                snapshot.forEach(doc => messages.push(doc.data()));
+
+                if (messages.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">💌</div>
+                            <p>No messages sent yet</p>
+                            <p>Send some love to your partner!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = messages.map(msg => {
+                    // Try to get message from the message field first
+                    let messageText, messageEmoji;
+
+                    if (msg.message) {
+                        // Message field exists - parse it
+                        messageText = msg.message;
+                        messageEmoji = msg.message.split(' ')[0]; // Extract emoji from message
+                    } else if (msg.type && MESSAGE_TYPES[msg.type]) {
+                        // Fall back to MESSAGE_TYPES lookup for old messages
+                        const msgInfo = MESSAGE_TYPES[msg.type];
+                        messageText = msgInfo.text;
+                        messageEmoji = msgInfo.emoji;
+                    } else {
+                        // Unknown message type - show friendly error
+                        messageText = 'Message (format unknown)';
+                        messageEmoji = '💌';
+                    }
+
+                    const time = formatTime(msg.timestamp);
+                    const toName = msg.toName || USER_NAMES[msg.to] || 'Unknown';
+
+                    return `
+                        <div class="message-item">
+                            <div class="message-icon">${messageEmoji}</div>
+                            <div class="message-content">
+                                <div class="message-text">${messageText}</div>
+                                <div class="message-time">To ${toName} • ${time}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                list.innerHTML = '<div class="empty-state"><p>Error loading messages</p></div>';
+            }
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        async function clearHistory(type) {
+            if (!confirm('Are you sure you want to clear all messages?')) return;
+            if (!window.db) return;
+
+            try {
+                const field = type === 'received' ? 'to' : 'from';
+                const q = window.query(
+                    window.collection(window.db, 'messages'),
+                    window.where(field, '==', currentUser)
+                );
+
+                const snapshot = await window.getDocs(q);
+                const deletePromises = [];
+                snapshot.forEach(doc => deletePromises.push(window.deleteDoc(doc.ref)));
+                await Promise.all(deletePromises);
+
+                if (type === 'received') {
+                    renderHistory();
+                } else {
+                    renderSent();
+                }
+                showToast('Messages cleared! 🧹');
+            } catch (error) {
+                console.error('Error clearing messages:', error);
+                showToast('Failed to clear messages');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
