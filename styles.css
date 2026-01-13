@@ -54,8 +54,7 @@ h1, h2, h3 {
     z-index: 2;
     max-width: 600px;
     padding: 40px;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
 }
 
@@ -175,7 +174,7 @@ h1, h2, h3 {
     max-width: 400px;
 }
 
-.pyramid-image svg {
+.pyramid-image img {
     width: 100%;
     height: auto;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
@@ -249,10 +248,15 @@ h1, h2, h3 {
 @media (max-width: 768px) {
     .hero {
         padding: 0 20px;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 80px;
     }
 
     .hero-content {
         padding: 30px 20px;
+        text-align: center;
+        max-width: 100%;
     }
 
     .hero-buttons {
