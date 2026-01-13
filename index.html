@@ -20,7 +20,6 @@
                 <p class="subtitle">Für innere Stärke.</p>
                 <p class="subtitle">Für dein nächste Kapitel.</p>
             </div>
-            <p class="product-info">Eau de Parfum · 50 ml · UVP 19,95 €</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary">Jetzt entdecken</button>
                 <button class="btn btn-secondary">#GrowWithJulia</button>
@@ -46,30 +45,34 @@
             sinnlicher Vanille und geheimnisvollem Moschus.
         </p>
 
-        <!-- Fragrance Notes -->
-        <div class="notes-container">
-            <div class="note-card">
-                <div class="note-image">
-                    <div class="note-circle lotus-bg"></div>
-                </div>
-                <h3 class="note-title">Kopfnoten</h3>
-                <p class="note-ingredients">Lotus, Brombeere, Pflaume</p>
-            </div>
+        <!-- Scent Pyramid -->
+        <div class="pyramid-container">
+            <div class="pyramid-image">
+                <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Pyramid structure -->
+                    <polygon points="150,50 50,180 250,180" fill="#f5c5d4" opacity="0.8"/>
+                    <polygon points="50,180 250,180 230,280 70,280" fill="#e8b8c8" opacity="0.9"/>
+                    <polygon points="70,280 230,280 210,370 90,370" fill="#d4a5b8" opacity="1"/>
 
-            <div class="note-card">
-                <div class="note-image">
-                    <div class="note-circle jasmine-bg"></div>
-                </div>
-                <h3 class="note-title">Herznoten</h3>
-                <p class="note-ingredients">Kaschmirholz, Vanille, Jasmin</p>
+                    <!-- Text labels -->
+                    <text x="150" y="130" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#2c2c2c">Kopfnoten</text>
+                    <text x="150" y="235" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#2c2c2c">Herznoten</text>
+                    <text x="150" y="335" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" fill="#2c2c2c">Basisnoten</text>
+                </svg>
             </div>
-
-            <div class="note-card">
-                <div class="note-image">
-                    <div class="note-circle coffee-bg"></div>
+            <div class="pyramid-text">
+                <div class="pyramid-note">
+                    <h3 class="pyramid-title">Kopfnoten</h3>
+                    <p class="pyramid-description">Lotus, Brombeere, Pflaume</p>
                 </div>
-                <h3 class="note-title">Basisnoten</h3>
-                <p class="note-ingredients">Moschus, Vanille, Kaffee</p>
+                <div class="pyramid-note">
+                    <h3 class="pyramid-title">Herznoten</h3>
+                    <p class="pyramid-description">Kaschmirholz, Vanille, Jasmin</p>
+                </div>
+                <div class="pyramid-note">
+                    <h3 class="pyramid-title">Basisnoten</h3>
+                    <p class="pyramid-description">Moschus, Vanille, Kaffee</p>
+                </div>
             </div>
         </div>
     </section>
